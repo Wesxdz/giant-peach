@@ -412,6 +412,8 @@ cylinder(4, (0.3+screw_clearance)/2, (0.3+screw_clearance)/2);
 }
 }
 
+MotherPlatformIntegrated();
+
 //MothershipPlatformPreview();
 intersection()
 {

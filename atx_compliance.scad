@@ -64,9 +64,22 @@ module ATXPowerPassthrough()
     $fn = 128;
     // This one overlaps the board a bit because it's near the edge
     translate([atx_board_length+1+0.5, atx_board_height-5, 4]) rotate([0, 180, 0]) cylinder(10, 1.75, 1.75); // E ATX 12V x2 (CPU power)
-    translate([3+16, -2-0.5, 4]) rotate([0, 180, 0]) cylinder(10, 2, 2); // E ATX PWR
+    
+    // E ATX PWR (needs to be 5 cm min for the 12 pin)
+    translate([3+16, -2-0.5, 4]) rotate([0, 180, 0])
+    hull()
+    {
+        cylinder(10, 1.5, 1.5); 
+        translate([3, 0, 0]) cylinder(10, 1.5, 1.5);
+    }
+    
+    // GPU PWR
     gpu_pwr_rad = 1.25;
-    translate([-gpu_pwr_rad-0.5, gpu_pwr_rad+0.5, 4]) rotate([0, 180, 0]) cylinder(10, gpu_pwr_rad, gpu_pwr_rad); // GPU PWR
+    translate([-gpu_pwr_rad-0.5, gpu_pwr_rad+0.5, 4]) rotate([0, 180, 0]) hull()
+    {
+     cylinder(10, gpu_pwr_rad, gpu_pwr_rad);
+     translate([0, 2, 0]) cylinder(10, gpu_pwr_rad, gpu_pwr_rad);
+    }
 }
 
 module MMountSurface()
@@ -82,86 +95,45 @@ module MMountCave()
     rotate([0, 90, 0]) cylinder(30, (0.3+screw_clearance)/2, (0.3+screw_clearance)/2);
 };
 
+// Spacing on Long dimension
+top = 0.6 * 2.54;
+mid = top + 4.9 * 2.54;
+bottom = top + 11.1 * 2.54;
+
+// Short dimension
+layer_zero = atx_board_height-1.016;
+layer_one = layer_zero-(0.9*2.54);
+layer_two = layer_zero - 6.1*2.54;
+layer_three = layer_zero-8.95*2.54;
+
+atx_support_points = 
+[
+    [0, layer_zero, top], 
+    [0, layer_zero, top + 3.1 * 2.54], // MICRO ATX
+    [0, layer_zero, mid],
+    [0, layer_one, bottom],
+    [0, layer_two, top],
+    [0, layer_two, mid],
+    [0, layer_two, bottom],
+    [0, layer_three, top],
+    [0, layer_three, mid],
+    [0, layer_three, bottom]
+];
+
 module ATXMotherboardMountCave()
 {
-    
-    // A (above IO shield)
-    
-    // from short side
-    top = 0.6 * 2.54;
-    mid = top + 4.9 * 2.54;
-    bottom = top + 11.1 * 2.54;
-    
-    // from long side
-    layer_zero = atx_board_height-1.016;
-    layer_one = atx_board_height-2.286;
-    layer_two = atx_board_height-15.494;
-    layer_three = atx_board_height-22.733;
-    
-    // A
-    translate([0, layer_zero, top]) MMountCave();
-    
-    // B
-    translate([0, layer_zero, top + 3.1 * 2.54]) MMountCave();
-    
-    translate([0, layer_zero, mid]) MMountCave();
-    
-    translate([0, layer_one, bottom]) MMountCave();
-    
-    
-    translate([0, layer_two, top]) MMountCave();
-    
-    translate([0, layer_two, mid]) MMountCave();
-    
-    translate([0, layer_two, bottom]) MMountCave();
-    
-    
-    translate([0, layer_three, top]) MMountCave();
-    
-    translate([0, layer_three, mid]) MMountCave();
-    
-    translate([0, layer_three, bottom]) MMountCave();
+    for (i = [0 : len(atx_support_points) - 1])
+    {
+        translate(atx_support_points[i]) MMountCave();
+    }
 }
 
 module ATXMotherboardMountSurface()
 {
-    
-    // A (above IO shield)
-    
-    // from short side
-    top = 0.6 * 2.54;
-    mid = top + 4.9 * 2.54;
-    bottom = top + 11.1 * 2.54;
-    
-    // from long side
-    layer_zero = atx_board_height-1.016;
-    layer_one = atx_board_height-2.286;
-    layer_two = atx_board_height-15.494;
-    layer_three = atx_board_height-22.733;
-    
-    // A
-    translate([0, layer_zero, top]) MMountSurface();
-    
-    // B
-    translate([0, layer_zero, top + 3.1 * 2.54]) MMountSurface();
-    
-    translate([0, layer_zero, mid]) MMountSurface();
-    
-    translate([0, layer_one, bottom]) MMountSurface();
-    
-    
-    translate([0, layer_two, top]) MMountSurface();
-    
-    translate([0, layer_two, mid]) MMountSurface();
-    
-    translate([0, layer_two, bottom]) MMountSurface();
-    
-    
-    translate([0, layer_three, top]) MMountSurface();
-    
-    translate([0, layer_three, mid]) MMountSurface();
-    
-    translate([0, layer_three, bottom]) MMountSurface();
+    for (i = [0 : len(atx_support_points) - 1])
+    {
+        translate(atx_support_points[i]) MMountSurface();
+    }
 }
 
 // ATX Specification Version 2.2
