@@ -1,0 +1,8 @@
+The M3 screws did not have sufficient clearance.
+Especially the long ones that connect to the vertex connectors. These had PETG stuck in the hole area and I had to melt it out with a soldering iron.
+
+The ATX mount points are not precise: particularly, only 'one or two' by the GPU slit are correct (considering the IO shield intersection with panel). All the other others need to be shifted.
+
+Something to consider is to place the platform integrator squares on the bottom because the nuts look nice and it would reduce the total amount of volume printed (because the rounded trapezoids could be shorter)
+
+It took a little over an hour to assemble (mostly because of clearance issues)...

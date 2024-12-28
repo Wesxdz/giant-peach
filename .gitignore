@@ -1,0 +1,15 @@
+# Ignore everything by default
+*
+
+# Allow directories to be tracked
+!*/
+
+.gitignore
+# Allow .scad files
+!*.scad
+
+dev_parts/
+omniball/
+libraries/
+nutsnbolts/
+dev-log/
