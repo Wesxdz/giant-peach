@@ -85,13 +85,17 @@ module PiSections()
     PlatformSection(30, [30, 150], 24);
     color([1.0, 0.5, 1.0, 0.5])
     PlatformSection(30, [150, 270], 24);
-    color([1.0, 0.0, 0.0, 0.5])
-    PlatformSection(30, [30, -90], 24);
+    //color([1.0, 0.0, 0.0, 0.5])
+    //PlatformSection(30, [30, -90], 24);
     }
 }
 
 module BabyPlatform()
 {
+    union()
+    {
+    difference()
+    {
     intersection()
     {
     // TODO: Determine the scale relative to panel_radius...
@@ -103,8 +107,11 @@ module BabyPlatform()
     }
     translate([0, 0, to_wheel_mount_surface]) PiSections();//PlatformSection(radius, angles, fn);
     }
+    RestHolesComposite();
+    }
     // TODO: Split into 3D printed section union module
     RestComposite();
+    }
 }
 
 difference()

@@ -85,13 +85,13 @@ module ATXPowerPassthrough()
 module MMountSurface()
 {
     $fn=64;
-    rotate([0, 90, 0]) cylinder(0.8, .6, .8);
+    rotate([0, 90, 0]) color([0, 0, 0, 1]) cylinder(0.8, .6, .8);
 };
 
 module MMountCave()
 {
     $fn=64;
-    rotate([0, 90, 0])  BrassInsert();
+    rotate([0, 90, 0]) BrassInsert();
     rotate([0, 90, 0]) cylinder(30, (0.3+screw_clearance)/2, (0.3+screw_clearance)/2);
 };
 

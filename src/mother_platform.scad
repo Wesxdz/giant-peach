@@ -5,7 +5,7 @@ include <dodecahome_config.scad>
 
 include <core_platform.scad>
 include <atx_compliance.scad>
-include <penta_composite.scad>
+//include <penta_composite.scad>
 
 module DodecahedronSlice() {
     C0 = 0.809016994374947424102293417183;
@@ -167,7 +167,7 @@ module MotherConnectorInsert()
         translate(insert_points[i])
         {
         scale(0.1) screw("M3x16");
-        color([1.0, 0.5, 0.0, 0.5])
+        color([1.0, 0.5, 1.0, 0.5])
         translate([0, 0, -brass_insert_height]) BrassInsert();
         }
     }

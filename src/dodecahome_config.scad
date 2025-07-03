@@ -48,7 +48,8 @@ rots = [
 ];
 
 // These rotations align the panel edges
-panel_rots = [36, -36*4.5, 0, 18, 180+36, -18, 18, -18, 18, 18+72, 18, -36];
+panel_rots = [36, -36*4.5, 0, 18 - 72*2, 180+36, -18, 18, -18, 18+72, 18+72, 18, -36];
+//panel_rots = [36, -36*4.5, 0, 18, 180, -18, 18, -18, 18, 18+36, 18, 0];
 
 // 0 is Nose Cone
 // 1 is Bridge
@@ -71,8 +72,11 @@ unique_panel_colors = [
 // Indicate whether standard ventilation should be cutout on a panel
 vents = [true, true, true, true, true, true, true, true, true, true, true, true];
 
+// In ROBOT MODE, the wheels are configured into a triwheel design
 // Settings to configure robotic aspects and motherboard size
-robot_mode = false;
+robot_mode = true;
+
+
 build_config = "PROTOTYPE";
 
 dihedral = 116.565;
@@ -94,22 +98,34 @@ inner_panel_radius = panel_radius-(panel_thickness-panel_Z)*2;
 
 // Hex vent
 
+// Production
+//cell_size = 0.3;
+//wall_thickness = 0.1;
+
 // Small
 // cell_size = 0.4;
 // wall_thickness = 0.2;
 
 // Large
-cell_size = 0.6;
-wall_thickness = .3;
+//cell_size = 0.6;
+//wall_thickness = .3;
 
 // Iterate
-//cell_size = 8.0;
-//wall_thickness = .05;
+cell_size = 10.0;
+wall_thickness = .01;
 
 // The distance from a corner to the center of an M3 hole (for connectors)
 // the radius is centered at the base corner
 pcorner_dist = 3;
 m3_distance_from_panel_corner = [pcorner_dist, pcorner_dist, pcorner_dist , pcorner_dist , pcorner_dist ];
+
+// The space between the M3 screws to secure power variant vertex connector
+// (Bottom of Cradle panels)
+power_secure_spacing = 4.0;
+// Space between M3 screws on panel corners/connector notches with 2 screws
+// Front mothership and fan
+// (currently this should be <= 1.8, otherwise it will not extend to the inner surface of a vertex notch
+standard_secure_spacing = 1.3;
 
 // The distance from the panel edge, which is not vented
 border_edge = 1.0;
@@ -153,10 +169,17 @@ to_wheel_mount_surface = -16.9118;
 brass_insert_radius = 4.8/2/10;
 brass_insert_height = 4/10;
 
-screw_clearance = 0.02;
+screw_clearance = 0.03;
+m3_rad = 0.15+screw_clearance;
 
 module BrassInsert()
 {
     $fn=64;
     cylinder(0.4, (0.5-0.02)/2, (0.5-0.02)/2);
+}
+
+module BrassInsertHolder()
+{
+    $fn=64;
+    cylinder(0.4, 0.5, 0.5);
 }

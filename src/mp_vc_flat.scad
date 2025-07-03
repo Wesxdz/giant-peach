@@ -75,11 +75,11 @@ translate([0, 0, (7.722)-42]) cube([80, 80, 40], center=true);
 
 // translate([0, 2, 2]) PlatformVertexConnectors("escape_pod_connectors.stl", [0.0, 1.0, 1.0, 1.0], 1);
 
-intersection()
-{
-translate([0, 0, 0]) PlatformVertexConnectors("platform_connectors.stl", [1.0, 0.0, 1.0, 1.0], 1);
-import("escape_pod_connectors.stl");
-}
+//intersection()
+//{
+//translate([0, 0, 0]) PlatformVertexConnectors("platform_connectors.stl", [1.0, 0.0, 1.0, 1.0], 1);
+//import("escape_pod_connectors.stl");
+//}
 //color([0.8, 0.8, 0.9, 0.5])
 //import("mother_platform_full.stl");
 

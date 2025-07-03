@@ -3,7 +3,7 @@ include <dodecahome_config.scad>
 // Mounting bracket for wheels
 
 module beveled_cylinder(h, r) {
-    $fn = 24; // Optional: set the number of fragments for a smoother shape
+    $fn = 64; // Optional: set the number of fragments for a smoother shape
     minkowski() {
         translate([0, 0, 0.5]) cylinder(h - 1.0, r - 0.5, r - 0.5); // Adjusted cylinder dimensions
         sphere(0.5); // Bevel radius
@@ -26,7 +26,11 @@ module ScooterWheel(radius)
     difference()
     {
         color([0, 0, 0, .5])
-        beveled_cylinder(2.4, radius);
+        hull()
+        {
+            cylinder(2.4, radius*0.5, radius*0.5);
+            translate([0, 0, 0.6]) beveled_cylinder(1.2, radius);
+        }
         $fn = 32;
         cylinder(2.4, 1.1, 1.1);
     }

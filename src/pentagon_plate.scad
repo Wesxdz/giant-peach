@@ -1,6 +1,18 @@
 include <render_config.scad>
 include <dodecahome_config.scad>
 
+module pentagon(size) {
+angle = 360 / 5;
+points = [
+  [size * cos(0), size * sin(0)],
+  [size * cos(angle), size * sin(angle)],
+  [size * cos(2 * angle), size * sin(2 * angle)],
+  [size * cos(3 * angle), size * sin(3 * angle)],
+  [size * cos(4 * angle), size * sin(4 * angle)]
+];
+polygon(points);
+}
+
 module PentagonPlate(radius, cell_size, wall_thickness, thickness, border_edge, vent=true, render_color=[1, 0, 0, 0.5]) {
 
   module chamfered_pentagon(base_radius, top_radius, thickness) {
@@ -20,17 +32,7 @@ module PentagonPlate(radius, cell_size, wall_thickness, thickness, border_edge, 
     polyhedron(points = concat(base_coords, top_coords), faces = faces);
   }
   
-  module pentagon(size) {
-    angle = 360 / 5;
-    points = [
-      [size * cos(0), size * sin(0)],
-      [size * cos(angle), size * sin(angle)],
-      [size * cos(2 * angle), size * sin(2 * angle)],
-      [size * cos(3 * angle), size * sin(3 * angle)],
-      [size * cos(4 * angle), size * sin(4 * angle)]
-    ];
-    polygon(points);
-  }
+
 
   // Hexagon cell
   module hexagon_cell(size, wall_thickness) {
@@ -78,4 +80,4 @@ module PentagonPlate(radius, cell_size, wall_thickness, thickness, border_edge, 
     panel();
   }
   
-//PentagonPlate(panel_radius, 0.3, 0.1, panel_thickness, border_edge, true, [0, 1, 1, 1]);
+//scale(10) PentagonPlate(panel_radius, 0.3, 0.1, panel_thickness, border_edge, true, [0, 1, 1, 1]);

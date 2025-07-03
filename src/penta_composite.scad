@@ -18,21 +18,6 @@ mothership_connectors = [
 [1, 1, 1, 1, 1],
 ];
 
-mortality_escape_pod_connectors = [
-[1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1],
-[1, 1, 1, 1, 1],
-[0, 1, 1, 1, 0],
-[0, 0, 0, 0, 0],
-[0, 0, 0, 0, 0],
-[0, 0, 0, 0, 0],
-[0, 0, 0, 0, 0],
-[1, 1, 1, 0, 0],
-[0, 0, 0, 0, 0],
-[1, 1, 0, 0, 1],
-[0, 0, 0, 0, 0],
-];
-
 notch_security =
 [
 [0, 0, 0, 0, 0],
@@ -53,7 +38,7 @@ full_connectors = [1, 1, 1, 1, 1];
 
 module PentaVolume()        
 {
-standard_panel_rots = [36, -36*4.5, 0, 18, 36, -18, 18, -18, 18, 36+18, 18, 0];
+standard_panel_rots = [36, -36*4.5, 0, 18, 36, -18, 18, -18, 18, 36+18+36*6, 18, 0+36*4];
 
 union()
 rotate([-magic_angle, 0, 0])
@@ -62,10 +47,14 @@ for (i = [0 : len(pos)-1])
 {
 translate(pos[i]*inner_panel_edge_length) rotate(rots[i]) rotate([0, 0, standard_panel_rots [i]]) 
     {
-//    if (face_groups [i] == 2 || face_groups [i] == 3)
-    //import("penta_mothership_dock.stl");
-    //PanelSubConnectors(full_connectors, notch_security[i]);
-    PanelSubConnectors(mothership_connectors[i], notch_security[i]);
+        if (face_groups [i] == 3)
+        {
+            PanelSubConnectorsCradle();
+        }
+        else
+        {
+            PanelSubConnectors(full_connectors, notch_security[i]);
+        }
     }
 }
 }
@@ -142,28 +131,28 @@ translate([0, 0, -8]) cube([50, 50, 12], center=true);
 }
 
 //PentaVolume();
-export_platform_connectors = false;
-if (export_platform_connectors)
-{
-intersection()
-{
-PlatformPentaVolume();
-// Just the six platform connectors
-translate([0, 0, -8]) cube([50, 50, 12], center=true);
-}
-}
+//export_platform_connectors = false;
+//if (export_platform_connectors)
+//{
+//intersection()
+//{
+//PlatformPentaVolume();
+//// Just the six platform connectors
+//translate([0, 0, -8]) cube([50, 50, 12], center=true);
+//}
+//}
+//
+//preview_docks = false;
+//if (preview_docks)
+//{
+//difference()
+//{
+//PlatformPentaDocks();
+//PlatformPentaDockHoles();
+//}
+//}
 
-preview_docks = false;
-if (preview_docks)
-{
-difference()
-{
-PlatformPentaDocks();
-PlatformPentaDockHoles();
-}
-}
-
-//PentaVolume();
+PentaVolume();
 
 //PlatformPentaVolume();
 
