@@ -99,8 +99,8 @@ inner_panel_radius = panel_radius-(panel_thickness-panel_Z)*2;
 // Hex vent
 
 // Production
-//cell_size = 0.3;
-//wall_thickness = 0.1;
+cell_size = 0.3;
+wall_thickness = 0.1;
 
 // Small
 // cell_size = 0.4;
@@ -111,8 +111,8 @@ inner_panel_radius = panel_radius-(panel_thickness-panel_Z)*2;
 //wall_thickness = .3;
 
 // Iterate
-cell_size = 10.0;
-wall_thickness = .01;
+//cell_size = 10.0;
+//wall_thickness = .01;
 
 // The distance from a corner to the center of an M3 hole (for connectors)
 // the radius is centered at the base corner

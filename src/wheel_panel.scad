@@ -101,103 +101,110 @@ module WheelMountSlots(wheel_config)
     }
 }
 
-module WheelPanelPrefab(rotation, radius, cell_size, wall_thickness, thickness, border_edge, vent=true, render_color, show_mount=false, show_rest=false, wheel_config=0)
-{
+module WheelPanelPrefab(rotation, radius, cell_size, wall_thickness, thickness, border_edge, vent = true, render_color, show_mount = false, show_rest = false, wheel_config = 0) {
 
-// Wheel config
-// 0. static stable only
-// 1. front cradle fixed or steerable standard
-// 2. right (facing me) cradle fixed standard
-// 3. left (facing me) cradle fixed standard
+    // Wheel config
+    // 0. static stable only
+    // 1. front cradle fixed or steerable standard
+    // 2. right (facing me) cradle fixed standard
+    // 3. left (facing me) cradle fixed standard
 
-difference()
-{
-// TODO: Evaluate what this size should be, where it should be
-// if there should be additional support mechanisms (esp if not metal)
-// prior to 2nd print run
-mounted_wheel_depth = 0.5 + .002;
+    difference() {
+        // TODO: Evaluate what this size should be, where it should be
+        // if there should be additional support mechanisms (esp if not metal)
+        // prior to 2nd print run
+        mounted_wheel_depth = 0.5 + 0.002;
 
-shift_forward_dist = (wheel_config == 2 ? 1 : -1) * 0.5;
-front_wheel_shift = 0.0; // -1.6; // -1.9
+        shift_forward_dist = (wheel_config == 2 ? 1 : -1) * 0.5;
+        front_wheel_shift = 0.0; // -1.6; // -1.9
 
-// The forward rotation constraint vector depends on 'how high off the ground the front wheel is'
-// When flat, 0 standard wheels spin out away from each other
-// and 36 spin inward towards each other
-// Expected to be somewhere in the middle of the range from 0-36 degrees
-// (Between static stable mode and 'tetrahedron C uptilt forward')
+        // The forward rotation constraint vector depends on 'how high off the ground the front wheel is'
+        // When flat, 0 standard wheels spin out away from each other
+        // and 36 spin inward towards each other
+        // Expected to be somewhere in the middle of the range from 0-36 degrees
+        // (Between static stable mode and 'tetrahedron C uptilt forward')
 
-// approximated by iteration from visual inspection of orthographic front view mount self-occlusion
-standard_side_wheel_tilt = 24.635;
+        // approximated by iteration from visual inspection of orthographic front view mount self-occlusion
+        standard_side_wheel_tilt = 24.635;
 
-stationary_rot = rotation;
-if (robot_mode) {
-    stationary_rot = stationary_rot + 18;
-}
+        stationary_rot = rotation;
 
-translate([0, 0, 0])
-{
-    if (show_mount) {
-        color([0, 1, 0])
-        // In triwheel mode, the front wheel faces directly forward
+        translate([0, 0, 0]) {
+            if (show_mount) {
+                color([0, 1, 0]) {
+                    // In triwheel mode, the front wheel faces directly forward
 
-        if (robot_mode)
-        {
-            rotate_wheel_z = wheel_config == 2 ? -standard_side_wheel_tilt : (wheel_config == 3 ? standard_side_wheel_tilt : (wheel_config == 1 ? -90 : 0));
-            translate([wheel_config == 1 ? front_wheel_shift -0.5 : 0, 0, 0])
-            rotate([0, 0, rotate_wheel_z])
-            translate([0, -shift_forward_dist, 0])
-            // The exact displacement of the front wheel mount to be even with the side wheels
-            // depends on the profile of the scooter wheels for exact calculation
-            translate([(wheel_config == 1 ? -wmb_pio/2 : -wmb_pio), 0, -panel_to_wheel_center+0.5+panel_thickness*1.65]) rotate([-90, 0, -90])
-            MountedWheel(mounted_wheel_depth);
+                    if (robot_mode) {
+                        rotate_wheel_z = wheel_config == 2 ? -standard_side_wheel_tilt : (wheel_config == 3 ? standard_side_wheel_tilt : (wheel_config == 1 ? -90 : 0));
+                        translate([wheel_config == 1 ? front_wheel_shift - 0.5 : 0, 0, 0])
+                        rotate([0, 0, rotate_wheel_z])
+                        translate([0, -shift_forward_dist, 0])
+                        // The exact displacement of the front wheel mount to be even with the side wheels
+                        // depends on the profile of the scooter wheels for exact calculation
+                        translate([(wheel_config == 1 ? -wmb_pio / 2 : -wmb_pio), 0, -panel_to_wheel_center + 0.5 + panel_thickness * 1.65])
+                        rotate([-90, 0, -90])
+                        MountedWheel(mounted_wheel_depth);
+                    } else {
+                        translate([(wheel_config == 1 ? -wmb_pio / 2 : -wmb_pio), 0, -panel_to_wheel_center + 0.5 + panel_thickness * 1.65])
+                        rotate([-90, 0, -90])
+                        //MountedOmniBall();
+                        MountedWheel(mounted_wheel_depth);
+                    }
+                }
+            }
+            difference() {
+                // For back wheels, rotate Z standard_side_wheel_tilt
+                // translate([10, 0, 0]) rotate([180, 0, 36])
+
+                rotate([0, 0, stationary_rot])
+                difference() {
+                    ConnectorPentagonPlate(radius, cell_size, wall_thickness, thickness, border_edge, vent, render_color, [3, 3, 6, 3, 3], [4, wheel_config == 2 ? 14 : 4, wheel_config == 1 ? 22 : 19, wheel_config == 3 ? 14 : 4, 4], [wheel_config == 1 ? 1 : 0, 0, 1, 0, wheel_config == 1 ? 1 : 0], [standard_secure_spacing, standard_secure_spacing, power_secure_spacing, standard_secure_spacing, standard_secure_spacing]);
+                }
+                rotate_wheel_z = wheel_config == 2 ? -standard_side_wheel_tilt : (wheel_config == 3 ? standard_side_wheel_tilt : (wheel_config == 1 ? -90 : 0));
+                
+                translate([wheel_config == 1 ? front_wheel_shift + 0.5 : 0, 0, 0])
+                rotate([0, 0, rotate_wheel_z])
+                translate([0, -shift_forward_dist, 0])
+                WheelMountSlots(wheel_config);
+            }
+
+            if (show_rest) {
+                difference() {
+                    translate([-wmb_pio + 0.5, 0, 0])
+                    CradleRest();
+
+                    translate([-wmb_pio + 1, -2.0, -(-bracket_height / 2 - panel_thickness)])
+                    scale(0.1)
+                    rotate([0, 90, 0])
+                    cylinder(20, 7, 7);
+
+                    translate([-wmb_pio + 1, 2.0, -(-bracket_height / 2 - panel_thickness)])
+                    scale(0.1)
+                    rotate([0, 90, 0])
+                    cylinder(20, 7, 7);
+                }
+
+                translate([-wmb_pio + 0.5 + 0.5, -2.0, -(-bracket_height / 2 - panel_thickness)])
+                scale(0.1)
+                rotate([0, 90, 0])
+                screw("M6x25");
+
+                translate([-wmb_pio + 0.5 + 2 - 2.5, -2.0, -(-bracket_height / 2 - panel_thickness)])
+                scale(0.1)
+                rotate([0, 90, 0])
+                nut("M6");
+
+                translate([-wmb_pio + 0.5 + 0.5, 2.0, -(-bracket_height / 2 - panel_thickness)])
+                scale(0.1)
+                rotate([0, 90, 0])
+                screw("M6x25");
+
+                translate([-wmb_pio + 0.5 + 2 - 2.5, 2.0, -(-bracket_height / 2 - panel_thickness)])
+                scale(0.1)
+                rotate([0, 90, 0])
+                nut("M6");
+            }
         }
-        else
-        {
-            
-            translate([(wheel_config == 1 ? -wmb_pio/2 : -wmb_pio), 0, -panel_to_wheel_center+0.5+panel_thickness*1.65]) rotate([-90, 0, -90]) 
-            //MountedOmniBall();
-            MountedWheel(mounted_wheel_depth);
-        }
-    }
-    difference()
-    {
-        // For back wheels, rotate Z standard_side_wheel_tilt
-        // translate([10, 0, 0]) rotate([180, 0, 36])
-
-        rotate([0, 0, stationary_rot]) 
-        difference()
-        {
-        // ConnectorPentagonPlate(radius, cell_size, wall_thickness, thickness, border_edge, vent, render_color, [2, 2, 5, 2, 2], [4, 4, 19, 4, 4]);
-        // TODO: Support multiple holes in Connector Pentagon Plate prefab
-        ConnectorPentagonPlate(radius, cell_size, wall_thickness, thickness, border_edge, vent, render_color, [3, 3, 6, 3, 3], [4, wheel_config == 2 ? 14 : 4, wheel_config == 1 ? 22 : 19, wheel_config == 3 ? 14 : 4, 4], [wheel_config == 1 ? 1 : 0, 0, 1, 0, wheel_config == 1 ? 1 : 0], [standard_secure_spacing, standard_secure_spacing, power_secure_spacing, standard_secure_spacing, standard_secure_spacing]);
-        }
-        
-        WheelMountSlots(wheel_config);
-    }
-    
-    if (show_rest)
-    {
-       
-    difference()
-    {
-    translate([-wmb_pio+0.5, 0, 0]) CradleRest();
-    
-    translate([-wmb_pio+1, -2.0, -(-
-    bracket_height/2-panel_thickness)]) scale(0.1) rotate([0, 90, 0]) cylinder(20, 7, 7);
-    
-        translate([-wmb_pio+1, 2.0, -(-
-    bracket_height/2-panel_thickness)]) scale(0.1) rotate([0, 90, 0]) cylinder(20, 7, 7);
-    }
-    
-    translate([-wmb_pio+0.5+0.5, -2.0, -(-
-    bracket_height/2-panel_thickness)]) scale(0.1) rotate([0, 90, 0]) screw("M6x25");
-    
-    translate([-wmb_pio+0.5+2-2.5, -2.0, -(-bracket_height/2-panel_thickness)]) scale(0.1) rotate([0, 90, 0]) nut("M6");
-    
-    translate([-wmb_pio+0.5+0.5, 2.0, -(-bracket_height/2-panel_thickness)]) scale(0.1) rotate([0, 90, 0]) screw("M6x25");
-    
-    translate([-wmb_pio+0.5+2-2.5, 2.0, -(-bracket_height/2-panel_thickness)]) scale(0.1) rotate([0, 90, 0]) nut("M6");
-    }
     }
 }
 // depth of wheel mount
@@ -209,7 +216,6 @@ translate([0, 0, 0])
 //translate([-wmb_pio+0.5+triangular_prism_offset+1, 0, 0]) sphere(1);
 
 //translate([-wmb_pio+0.5, 0, 0]) CradleRest();
-}
 
 module RestPrefabHoles(rotation, radius, cell_size, wall_thickness, thickness, border_edge, vent=true, render_color)
 {
@@ -250,5 +256,5 @@ module RestPrefab(rotation, radius, cell_size, wall_thickness, thickness, border
 //rotate([0, -tetra_a, 0])
 //{
 //translate([-wmb_pio+0.5, 0, 0]) CradleRest();
-//WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, false, color([0, 1, 1, 1]), false, show_rest=false, 1);
+//WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, show_cradle_vent, color([0, 1, 1, 1]), true, show_rest=false, 3);
 //}
