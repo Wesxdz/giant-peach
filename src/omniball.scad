@@ -13,13 +13,26 @@ bearing_cutout = 37/2;
 chopped = calculate_chopped_distance(wheel_radius, wheel_cutout);
 axis_connection_thickness = 8;
 
+// James Bruton's design used larger bearings like these
 // https://www.amazon.com/uxcell-6705-2RS-Groove-Bearings-Double
+// However the original Tetrahedral Mobile Robot (Tadakuma 2006) 
+// from what I can tell used standard 608 bearings and expanded the inner cylinder
+// See Fig. 9 vs Fig. 11/12 bearing positions
+//module BallBearing()
+//{
+//    difference()
+//    {
+//        cylinder(4, 37/2, 37/2);
+//        cylinder(4, 30/2, 30/2);
+//    }
+//}
+
 module BallBearing()
 {
     difference()
     {
-        cylinder(4, 37/2, 37/2);
-        cylinder(4, 30/2, 30/2);
+        cylinder(7, 22/2, 22/2);
+        cylinder(7, 8/2, 8/2);
     }
 }
 
@@ -45,6 +58,7 @@ module HemisphereSection()
 module Bearings()
 {       
         // Near-barrel wheel
+        // The problem is that it will overlap the barrel dowel pin
         translate([-wheel_radius + calculate_chopped_distance(wheel_radius, 37/2), 0, 0]) rotate([0, 90, 0]) BallBearing();
         // Near axis-connector
         translate([-axis_connection_thickness -8, 0, 0]) rotate([0, 90, 0]) BallBearing();
@@ -65,6 +79,7 @@ module HemisphereConnector(barrel_wheel_offset, barrel_wheel_radius, barrel_whee
             rotate([0, -90, 0]) cylinder(h=wheel_radius-2, r1=wheel_cutout, r2=wheel_cutout);
             translate([barrel_wheel_offset, 0, 0]) cuboid([(barrel_wheel_radius+wheel_to_center_padding)*2, 40, barrel_wheel_height], rounding=0.5);
         }
+        color([0.3, 0.3, 0.3, 1])
         Bearings();
         // Bearing spacer
         translate([-axis_connection_thickness -4, 0, 0]) rotate([0, 90, 0]) BallBearing();
@@ -109,7 +124,6 @@ module SemiWrap()
 module Semiball()
 {
 
-    color("grey")
     union()
     {
     union()
@@ -127,7 +141,7 @@ module Semiball()
     }
 }
 
-module Omniball()
+module Omniball(show_screws=false)
 {
     union()
     {
@@ -147,8 +161,13 @@ module Omniball()
     }
     }
     // 150mm m8 threaded rod
-    translate([0, inner_radius, 0]) rotate([90, 0, 0]) cylinder(150, 4, 4);
-    AxisConnectionScrews();
+    pad = 10;
+    translate([0, wheel_radius+pad , 0]) rotate([90, 0, 0]) cylinder((
+    wheel_radius+pad)*2, 4, 4);
+    if (show_screws)
+    {
+        AxisConnectionScrews();
+    }
     }
 }
 
@@ -171,6 +190,6 @@ module AxisConnectionScrews()
 }
 
 
-HemisphereConnector(barrel_wheel_offset, barrel_wheel_radius, barrel_wheel_height);
-//Omniball();
+//HemisphereConnector(barrel_wheel_offset, barrel_wheel_radius, barrel_wheel_height);
+Omniball();
 //Omniwrap();

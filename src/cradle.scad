@@ -48,7 +48,8 @@ $fn=128;
                 
                 if (i == 9) 
                 {
-                    WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, show_cradle_vent, color([0, 1, 1, 1]), show_mounts , show_rest=false, 1);
+                    WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, show_cradle_vent, color([0, 1, 1, 1]), true, show_rest=false, 1);
+                    translate([0, 0, -7]) scale(0.1) import("omniball.stl");
                 }
                 }
                 
@@ -90,55 +91,10 @@ $fn=100;
 
 rotate([0, -tetra_a, 0])
 {
-gear_cutout_radius = 9.0;
 
-translate([0, 0, 20.9443]) difference()
+translate([0, 0, 20.9443])
 {
 Cradle();
-//color([0, 1, 0, 0.4]) rotate([0, 180, 0]) cylinder(30, gear_cutout_radius, gear_cutout_radius, $fn=120);
-}
-
-// TODO: Static stable mode should align with the panel
-// by making this circle extrusion middle and edges cutout on the first panel_thickness depth
-// The extrusion beyond the chassis is to prevent the turning
-// cylinder from being pushed in essentially...
-
-translate([0, 0, -panel_thickness]) difference()
-{
-color([0.2, 0.6, 0.2, 1]) cylinder(panel_thickness, gear_cutout_radius+1, gear_cutout_radius+1, $fn=64);
-WheelMountSlots(1);
-}
-
-difference()
-{
-color([0.2, 0.6, 0.2, 1]) cylinder(panel_thickness, gear_cutout_radius, gear_cutout_radius, $fn=64);
-WheelMountSlots(1);
-}
-
-//translate([0, 0, -panel_thickness]) color([0.2, 0.6, 0.2, 1]) linear_extrude(panel_thickness*2) projection() {
-//intersection()
-//{
-//Cradle();
-//color([0, 1, 0, 0.4]) rotate([0, 180, 0]) cylinder(30, gear_cutout_radius, gear_cutout_radius, $fn=120);
-//}
-//}
-
-wg_teeth = 40;
-wheel_gear_circle_diameter = gear_cutout_radius*2.0-1;
-pitch = PI*wheel_gear_circle_diameter/wg_teeth;
-color([0.5, 0.5, 0.5, 1.0]) translate([0, 0, panel_thickness*2]) difference() {
-linear_extrude(panel_thickness) spur_gear2d(circ_pitch=pitch, teeth=wg_teeth, shaft_diam=0);
-WheelMountSlots(4);
-}
- 
-tg_teeth = 6;
-turning_gear_circle_diameter = 3;
-rotate([0, 0, -36-72]) translate([(wheel_gear_circle_diameter+turning_gear_circle_diameter)/2, 0, panel_thickness*2]) 
-{
-color([0.2, 0.0, 0.8, 1.0]) linear_extrude(panel_thickness)
- spur_gear2d(circ_pitch=pitch, teeth=6, shaft_diam=0.5);
- 
- translate([0, 0, panel_thickness]) color([0.4, 0.4, 0.4, 0.5]) cylinder(6, 2, 2, $fn=36);
 }
 }
 
