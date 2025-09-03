@@ -80,6 +80,27 @@ module Semisphere()
     }
 }
 
+module SemisphereRing()
+{
+    difference()
+    {
+        sphere(wheel_radius);
+        union()
+        {
+            // Remove the minimum region which the M8 rod must passthrough
+            translate([-9/2, -wheel_radius, -wheel_radius])
+            cube([wheel_radius*2, wheel_radius*2, wheel_radius*2]);
+            
+            // Remove the pole part of the hemisphere
+            mirror([1, 0, 0]) translate([axis_connection_thickness+1.0, -wheel_radius, -wheel_radius])
+            cube([wheel_radius*2, wheel_radius*2, wheel_radius*2]);
+            
+            // Remove the region which overlaps the axis connectors
+            rotate([0, -90, 0]) cylinder(h=10, r=inner_radius+2);
+        }
+    }
+}
+
 module HemisphereSection()
 {
     difference()
@@ -99,11 +120,7 @@ module HemisphereSection()
         hull()
         {
         // this needs to remain open for insertion of wheel barrel support piece...
-        translate([-split_pos, 0, 0]) rotate([0, -90, 0]) cylinder(h=wheel_radius-split_pos, r1=wheel_cutout+wheel_padding, r2=wheel_cutout+wheel_padding); // - split_pos - 7
-
-       
-      
-        //translate([-split_pos-(wheel_radius-split_pos-7), 0, 0]) rotate([0, -90, 0]) cylinder(h=wheel_radius-split_pos-7, r1=wheel_cutout-4, r2=wheel_cutout-4); 
+        translate([-split_pos, 0, 0]) rotate([0, -90, 0]) cylinder(h=wheel_radius-split_pos, r1=wheel_cutout+wheel_padding, r2=wheel_cutout+wheel_padding);
         }
         }
     }
@@ -145,7 +162,7 @@ module BarrelWheelSupportRod()
     }
 }
 
-module HemisphereConnector(show_barrel_region=false)
+module HemisphereConnector(show_barrel_region=true)
 {   
     union()
     {
@@ -231,6 +248,7 @@ module BarrelWheel(radius=3, height=3)
 module SemiWrap()
 {
     HemisphereSection();
+    SemisphereRing();
 }
 
 module BarrelWheelPlacement()
@@ -304,7 +322,7 @@ module Omniball(show_rod=false, show_nuts=false, show_screws=false)
                 {
                     union()
                     {
-                        //Semiball();
+                        Semiball();
                         
                         //HemisphereConnector();
                         if (show_nuts)
@@ -312,8 +330,8 @@ module Omniball(show_rod=false, show_nuts=false, show_screws=false)
                             OmmniballNuts();
                         }
 
-                        //mirror([1, 0, 0]) Semiball();
-                        mirror([1, 0, 0]) HemisphereConnector();
+                        mirror([1, 0, 0]) Semiball();
+                        //mirror([1, 0, 0]) HemisphereConnector();
                     }
                     union()
                     {   
@@ -447,10 +465,12 @@ module RodSystem()
 BarrelWheelSupportRodThreaded();
 ActiveRodsThreaded();
 }
+//SemisphereRing();
+//SemiWrap();
 
-Omniball(false, false, false);
+Omniball(true, true, true);
 // OmniballNuts();
-//Omniwrap();
+Omniwrap();
 
 //RodSystem();
 //OmmniballNuts();

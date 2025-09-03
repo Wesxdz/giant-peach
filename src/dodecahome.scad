@@ -44,10 +44,10 @@ for (i = [0 : len(pos)-1]) {
     //if(face_groups[i] == 3) // face_groups[i] == 2
     //if (meta_groups[i] == 1) // Mortality escape pod
     //if (meta_groups[i] == 1 || face_groups[i] == 1) // Mothership
-    if (i == 4 || i == 11)
     //if (face_groups[i] == 3)
     //if (face_groups[i] == 2) //&& i == 6
     //if (true)
+    if (i == 9)
     {
     translate(pos[i]*panel_edge_length) rotate(rots[i]) rotate([0, 0, panel_rots[i]])
     if (!render_fast_iter)
@@ -67,15 +67,15 @@ for (i = [0 : len(pos)-1]) {
         // TODO: Refactor sections to distinct files...
         else if (i == 4) 
         {
-            WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, show_cradle_vent, color([0, 1, 1, 1]), false, show_rest=false, 2);
+            WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, show_cradle_vent, color([0, 1, 1, 1]), true, show_rest=false, 2);
         }
         else if (i == 11) 
         {
-            WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, show_cradle_vent, color([0, 1, 1, 1]), false, show_rest=false, 3);
+            WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, show_cradle_vent, color([0, 1, 1, 1]), true, show_rest=false, 3);
         }
         else if (i == 9) 
         {
-            WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, show_cradle_vent, color([0, 1, 1, 1]), false, show_rest=false, 1);
+            WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, show_cradle_vent, color([0, 1, 1, 1]), true, show_rest=false, 1);
         }
        else if (i == 6)
         {
@@ -93,7 +93,7 @@ for (i = [0 : len(pos)-1]) {
             FanPanel(panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, vents[i], unique_panel_colors[i%len(unique_panel_colors)], 36);
         } else if (i == 7)
         {
-            FanPanel(panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, vents[i], unique_panel_colors[i%len(unique_panel_colors)], 36+18);
+            FanPanel(panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, vents[i], unique_panel_colors[i%len(unique_panel_colors)], 36*2+18);
         }
         else if (i == 3 || i == 10)
         {
@@ -105,7 +105,7 @@ for (i = [0 : len(pos)-1]) {
         if (i != 8)
         {
             //color(unique_panel_colors[i%len(unique_panel_colors)])
-            //ConnectorPentagonPlate(panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, vents[i], unique_panel_colors[i%len(unique_panel_colors)]);
+            ConnectorPentagonPlate(panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, vents[i], unique_panel_colors[i%len(unique_panel_colors)]);
             }
             if (i == 8)
             {
@@ -119,7 +119,7 @@ for (i = [0 : len(pos)-1]) {
         if (i == 4 || i == 11 || i == 9)
         {
             // WheelMountPrefab
-            WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, false);
+            WheelPanelPrefab(36, panel_radius, cell_size, wall_thickness, panel_thickness, border_edge, true);
         } else
         {
 

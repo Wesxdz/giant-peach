@@ -54,7 +54,7 @@ module FanPanel(radius, cell_size, wall_thickness, thickness, border_edge, vent=
     // Area around ventilation...
     }
     
-    scale(0.1) rotate([90,0,0]) ergonomic_handle(hand_length=178, hand_width=79.4, fingergroove=false);
+    //scale(0.1) rotate([90,0,0]) ergonomic_handle(hand_length=178, hand_width=79.4, fingergroove=false);
     
 //    // Simple handle cutout...
 //    handle_radius = 0.8;

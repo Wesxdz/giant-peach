@@ -143,7 +143,7 @@ module WheelMountSlots(wheel_config)
     }
 }
 
-module WheelPanelPrefab(rotation, radius, cell_size, wall_thickness, thickness, border_edge, vent = true, render_color, show_mount = false, show_rest = false, wheel_config = 0) {
+module WheelPanelPrefab(rotation, radius, cell_size, wall_thickness, thickness, border_edge, vent = true, render_color, show_mount = true, show_rest = false, wheel_config = 0) {
 
     // Wheel config
     // 0. static stable only
@@ -212,7 +212,9 @@ module WheelPanelPrefab(rotation, radius, cell_size, wall_thickness, thickness, 
             difference() {
                 // For back wheels, rotate Z standard_side_wheel_tilt
                 // translate([10, 0, 0]) rotate([180, 0, 36])
-
+                
+                if (false) // TODO: Render only the wheel/mount in pos
+                {
                 rotate([0, 0, stationary_rot])
                 difference() {
                     ConnectorPentagonPlate(radius, cell_size, wall_thickness, thickness, border_edge, true, render_color, [3, 3, 6, 3, 3], [4, wheel_config == 2 ? 14 : 4, wheel_config == 1 ? 22 : 19, wheel_config == 3 ? 14 : 4, 4], [wheel_config == 1 ? 1 : 0, 0, 1, 0, wheel_config == 1 ? 1 : 0], [standard_secure_spacing, standard_secure_spacing, power_secure_spacing, standard_secure_spacing, standard_secure_spacing]);
@@ -225,6 +227,7 @@ module WheelPanelPrefab(rotation, radius, cell_size, wall_thickness, thickness, 
                 rotate([0, 0, rotate_wheel_z])
                 translate([0, -shift_forward_dist, 0])
                 WheelMountSlots(wheel_config);
+                }
                 }
             }
 
