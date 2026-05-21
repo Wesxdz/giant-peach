@@ -3,7 +3,7 @@
 
 include <telescoping_lift.scad>
 include <vertex_structure.scad>
-include <vertex_composite.scad>
+use <vertex_composite.scad>
 include <lift_mount_vertex_connector.scad>
 
 //VertexStructure(height = 2.2, rounding = 0.2, truncate=vertex_tehtra_height_truncation*1.5, prism_radius = 4.3, pent_h=5.0, vertex_cut=1, secure=1);

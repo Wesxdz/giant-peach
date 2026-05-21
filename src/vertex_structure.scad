@@ -84,13 +84,10 @@ module VertexConnectorSimple(height=0.2)
     }
 }
 
-// TODO: VERTEX STRUCTURE IS THE NEWER VERSION OF VERTEX_CONNECTOR.SCAD
 module VertexConnector(height=0.2, rounding=0.2, truncate=0.03, prism_radius = 0.02, vertex_cut=2.5) 
 {
-    // The main translate for the whole part
     translate([0, 0, rounding])
     minkowski() {
-        // We do the subtraction INSIDE the minkowski to round the resulting edges
         difference() {
             intersection() {
                 // Shrink height by rounding for minkowski expansion
@@ -99,30 +96,6 @@ module VertexConnector(height=0.2, rounding=0.2, truncate=0.03, prism_radius = 0
                 
                 difference() {
                     scale(100) Dodecahedron_Grounded();
-                    
-                    // Center prism (also shrunk slightly for rounding)
-
-                    // CUTOUT FOR THE TOP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    // ALSO CHANGE VertexConnectorScrewHoles multi_secture_spacing: TODO REFACTOR THIS SO IT'S POSSIBLE TO
-                    // OUTPUT BOTH THE TOP AND BOTTOM VARIANTS
-                    // difference() {
-
-                    //     cylinder(h = (height+truncate)*10, r = prism_radius - rounding, $fn=36*2, center=true); // $fn = 3
-
-                    //     plat_w = 10;
-                    //     plat_d = 5;
-                    //     // MGN[2]/2
-                    //     plat_x_offsets = [-plat_w/2 - 4, -5];
-                    //     plat_y_offsets = [1, 2.0];
-                    //     for (i = [0:1]) {
-                    //         rotate([0, 0, 60+(360/4) * i]) {
-                    //             // We move the cube OUTWARD by the 'rounding' amount 
-                    //             // so the minkowski expansion puts the flat face exactly where you want it.
-                    //             translate([plat_x_offsets[i], plat_y_offsets[i], 0])
-                    //                 cube([plat_w, plat_d, 10]);
-                    //         }
-                    //     }
-                    // }
                 }
             }
 
@@ -207,34 +180,6 @@ translate([0, 0, vertex_tehtra_height_truncation*10*2]) cube([100, 100, vertex_t
 }
 }
 
-
-module VertexConnectorToTriangularPrism()
-{
-scale(10) rotate([0, 180, 0]) 
-{
-VertexConnectorV2();
-
-union()
-{
-difference()
-{
-VertexConnectorV2Top();
-
-rotate([-magic_angle*2, 0, 0])
-translate([0, 51.1, 0])
-cube(100, center=true);
-
-// This is the cube that cuts off the bottom part of the triangular prism
-// from the perspective of the ground flat plane
-rotate([-magic_angle*2, 0, 0])
-translate([0, 0, -7.2])
-cube(12, center=true);
-}
-}
-}
-}
-
-
 module VertexConnectorScrewHoles(secure=1, rounding=0.0, pent_h = pcorner_dist)
 {
     multi_secure_spacing = 1.75; // Bottom panel...
@@ -311,14 +256,11 @@ VertexConnectorScrewHoles(rounding=rounding, secure=secure, pent_h=pent_h);
 
 }
 
+
 module VertexStructureVolume(height = 1.5, rounding = 0.2, truncate=vertex_tehtra_height_truncation, prism_radius = 0.0, vertex_cut=2.5, pent_h=pcorner_dist, secure=0)
 {
 VertexConnector(height, rounding, truncate, prism_radius, vertex_cut);
 }
-
-//VertexStructure();
-
-//Vertex(height = 0.4, rounding = 0.001, truncate=0.0, prism_radius = 0.03);
 
 module Sector(radius, angles, fn = 24) {
     r = radius / cos(180 / fn);
@@ -395,12 +337,12 @@ module VertexStructureTop()
 scale(0.1)
 {
 tri_extend = 2.5;
-translate([0, 0, -tri_extend])
-linear_extrude(tri_extend +vertex_tehtra_height_truncation)
+translate([0, 0, -tri_extend-vertex_tehtra_height_truncation*10])
+linear_extrude(tri_extend +vertex_tehtra_height_truncation*10*2+2)
 {
 projection()
 {
-difference()
+intersection()
 {
 color([1, 1, 0, 0.2]) translate([0, 0, 5.28+18.5]) scale(10) VertexStructure();
 translate([0, 0, vertex_tehtra_height_truncation*10*2]) cube([100, 100, vertex_tehtra_height_truncation*10*2], center=true);
@@ -410,11 +352,24 @@ translate([0, 0, vertex_tehtra_height_truncation*10*2]) cube([100, 100, vertex_t
 }
 }
 
+
+module VertexStructureProfileBottom(extrude_amnt=2)
+{
+    linear_extrude(extrude_amnt)
+    {
+        projection()
+        {
+            VertexStructureVolume();
+        }
+    }
+}
+
 module VertexConnectorToTriangularPrism()
 {
-scale(10) rotate([0, 180, 0]) 
+scale(10) rotate([0, 180, 180]) 
 {
-VertexStructure();
+//VertexStructure();
+VertexStructureIntruder(extrude_amnt=10);
 
 union()
 {
@@ -422,13 +377,13 @@ difference()
 {
 VertexStructureTop();
 
-rotate([-magic_angle*2, 0, 0])
+rotate([tetra_a-90, 0, 0])
 translate([0, 51.1, 0])
 cube(100, center=true);
 
 // This is the cube that cuts off the bottom part of the triangular prism
 // from the perspective of the ground flat plane
-rotate([-magic_angle*2, 0, 0])
+rotate([tetra_a-90, 0, 0])
 translate([0, 0, -7.2])
 cube(12, center=true);
 }
@@ -436,6 +391,33 @@ cube(12, center=true);
 }
 }
 
+
+//$fn=36;
+module VertexStructureIntruder(height = 1.5, rounding = 0.2, truncate=vertex_tehtra_height_truncation, prism_radius = 0.0, vertex_cut=2.5, pent_h=pcorner_dist, secure=0, extrude_amnt=2)
+{
+difference()
+{
+union()
+{
+VertexConnector(height, rounding, truncate, prism_radius, vertex_cut);
+
+translate([0, 0, vertex_tehtra_height_truncation+height-rounding]) VertexStructureProfileBottom(extrude_amnt);
+}
+
+union()
+{
+FrameRods();
+VertexConnectorScrewHoles(rounding=rounding, secure=secure, pent_h=pent_h);
+}
+}
+
+}
+
+//translate([100, 0, 0]) import("vertex_connector_to_triangular_prism.stl");
+//
+//VertexConnectorToTriangularPrism();
+
 //VertexStructure();
+//VertexStructureIntruder(extrude_amnt=10);
 //VertexStructureTop();
-// VertexConnectorToTriangularPrism();
+//VertexConnectorToTriangularPrism();

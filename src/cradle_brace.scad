@@ -2,6 +2,11 @@
 include <vertex_structure.scad>
 include <ari_shiguchi.scad>
 
+use <belt_loop.scad>
+use <pulleys.scad>
+use <gearmotor.scad>
+use <plane_slice_util.scad>
+
 include<BOSL2/std.scad>
 $fn=36*2;
 
@@ -10,16 +15,37 @@ module VertexMegichiMount()
     rotate([180, 0, 0])
     difference()
     {
-    //VertexConnectorToTriangularPrism();
-    // I had to export this as an STL from vertex_connector because i have limited memory capabilies and consequently mistakenly developed the new part in that depreciated file
-    // TODO: Refactor/fix
-    import("vertex_connector_to_triangular_prism.stl");
-    rotate([180, 0, 0])
-    rotate([magic_angle*2, 0, 0])
-    translate([0, -11, -20])
+//    rotate([0, 0, 180])
+//    rotate([tetra_a, 0, 0])
+    VertexConnectorToTriangularPrism();
+//    rotate([180, 0, 0])
+//    rotate([magic_angle*2, 0, 0])
+    // WTF is this random shit incorrect translation?
+    
+//    translate([0, -11, -20])
     Oguchi(h=24, nw=16, jd=10, ang=10, bw=50, bd=30, is_cutout=true);
     }
 }
+//translate([0, -11, -20])
+//    Oguchi(h=24, nw=16, jd=10, ang=10, bw=50, bd=30, is_cutout=true);
+
+//module VertexMegichiMountOld()
+//{
+//    rotate([180, 0, 0])
+//    difference()
+//    {
+//    //VertexConnectorToTriangularPrism();
+//    // I had to export this as an STL from vertex_connector because i have limited memory capabilies and consequently mistakenly developed the new part in that depreciated file
+//    // TODO: Refactor/fix
+//    import("vertex_connector_to_triangular_prism.stl");
+//    rotate([180, 0, 0])
+//    rotate([magic_angle*2, 0, 0])
+//    translate([0, -11, -20])
+//    Oguchi(h=24, nw=16, jd=10, ang=10, bw=50, bd=30, is_cutout=true);
+//    }
+//}
+//
+////VertexMegichiMountOld();
 
 module MountingInterface()
 {
@@ -40,13 +66,13 @@ module OmniballBrace()
 
     //bez = [[0,0], [100,0], [100,100]];
     bez = [[0,0], [40,16], [40,88]];
-    path = bezpath_curve(bez, N = 2);
+    path = bezpath_curve(bez, N = 2, splinesteps = 64);
 
 
     module CurvedSupport()
     {
     linear_extrude(40)
-    stroke(path, width=16, $fn=36*2);
+    stroke(path, width=16);
     }
 
 
@@ -75,10 +101,17 @@ bearing_cutout = 11;
 
 if (!print_layout)
 {
+//    VertexMegichiMount();
+    rotate([(90-tetra_a), 0, 0])
+    slice_above_p(60)
+    {
+    rotate([-(90-tetra_a), 0, 0])
     VertexMegichiMount();
+    }
 }
 
-rotate([print_layout ? 0 : magic_angle*2, 0, 0])
+// I had to switch from 90-tetra_a to magic_angle*2 to keep the rod straight, but the lfat section is not...
+rotate([print_layout ? 0 : 90-tetra_a, 0, 0])
 rotate([0, print_layout ? 0 : 90, 180])
 union()
 {
@@ -104,15 +137,24 @@ OmniballBrace();
 
 if (!print_layout)
 {
+
     translate([85, -142, 0])
     rotate([-90, 0, 0])
     cylinder(210, 4.2, 4.2, $fn=36);
 
-    // -116 is just approximate, it's pretty hard to calculate this value from the trig involved in the vertex junction
+    // -105 is just approximate, it's pretty hard to calculate this value from the trig involved in the vertex junction
     // but should be eventually figured out!
+//    translate([85, -105, 0])
+//    rotate([-90, 0, 0])
+//    cylinder(h=7, r1=bearing_cutout, r2=bearing_cutout, $fn=36);
+    
+
     translate([85, -105, 0])
     rotate([-90, 0, 0])
-    cylinder(h=7, r1=bearing_cutout, r2=bearing_cutout, $fn=36);
+    WheelAxisPulley();
+    
+    translate([-45, -90, 0]) 
+    rotate([90, 0, 0]) scale(10) BeltLoop(pitch_len=30);
 }
 
 }
@@ -121,4 +163,48 @@ if (!print_layout)
 //translate([100, 0, 0]) 
 //scale(10) VertexConnector();
 //
-//VertexConnectorBrace(true);
+
+// Example bed for motor attachment surface...
+//translate([0, 40, 20])
+//cube([40, 80, 10], center=true);
+//
+//translate([0, 30, 44])
+//rotate([-90, 0, 0])
+//Gearmotor37D();
+
+f
+module MotorMountBaseVertexStructure()
+{
+// rotate([-magic_angle, 0, 0])
+//
+//bonus = 11;
+
+//slice_above_p(80)
+//rotate([90-tetra_a-bonus, 0, 0])
+//rotate([90-tetra_a, 0, 0])
+//slice_above_p(45)
+//rotate([-(90-tetra_a), 0, 0])
+//rotate([-90+bonus, 0, 0])
+{
+rotate([-(tetra_a-90), 0, 0])
+slice_above_p(45)
+rotate([tetra_a-90, 0, 0])
+VertexMegichiMount();
+}
+}
+
+MotorMountBaseVertexStructure();
+
+//MotorMountBaseVertexStructure();
+
+
+
+//MotorMountBaseVertexStructure();
+
+//import("vertex_connector_to_triangular_prism.stl");
+//VertexConnectorToTriangularPrism();
+
+//VertexStructure();
+
+//rotate([-(90-tetra_a), 0, 0])
+//VertexConnectorBrace(false);

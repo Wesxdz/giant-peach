@@ -16,7 +16,7 @@ include <nutsnbolts/cyl_head_bolt.scad>;
 // Use milimeters 
 
 //$fn=16;
-//$fn=32;
+// $fn=32;
 $fn=64*8;
 // Production hemisphere
 //$fn=16;
@@ -248,7 +248,7 @@ translate([0, barrel_omniball_radius+3, omniball_radius-barrel_omniball_radius-p
 translate([0, -(barrel_omniball_radius+3), omniball_radius-barrel_omniball_radius-platform_height-4])
 BrassInsert();
 
-translate([0, -(barrel_omniball_radius+3), omniball_radius-barrel_omniball_radius-platform_height-4]) cylinder(10, 1.51, 1.51);
+translate([0, -(barrel_omniball_radius+3), omniball_radius-barrel_omniball_radius-platform_height-10]) cylinder(10, 1.51, 1.51);
 }
 
 //ConnectorInserts();
@@ -257,19 +257,19 @@ translate([0, -(barrel_omniball_radius+3), omniball_radius-barrel_omniball_radiu
 
 //$fn=128;
 ////rotate([0, 180, 0])
-difference()
-{
-BarrelWheelClamp();
-PlatformScrewHoles();
-}
+// difference()
+// {
+// BarrelWheelClamp();
+// PlatformScrewHoles();
+// }
 //
-NeoBearings();
+// NeoBearings();
 //
-difference()
-{
-BarrelWheelPlatform();
-PlatformScrews();
-}
+// difference()
+// {
+// BarrelWheelPlatform();
+// PlatformScrewHoles();
+// }
 
 //rotate([0, 180, 0])
 //BarrelWheelClamp();
@@ -280,7 +280,7 @@ PlatformScrews();
 //Semisphere();
 
 //color([0, 1, 0, 0.1]) sphere(omniball_radius, $fn=128);
-//HemisphereSection2();
+HemisphereSection2();
 
 module Underplat()
 {
@@ -298,12 +298,12 @@ union()
 }
 }
 
-//intersection()
-//{
-//sphere(omniball_radius, $fn=128*2);
-//translate([-omniball_radius+barrel_omniball_radius, 0, -barrel_wheel_height/2]) cylinder(barrel_wheel_height, barrel_omniball_radius, barrel_omniball_radius);
-//}
-//HemisphereConnector();
+// intersection()
+// {
+// sphere(omniball_radius, $fn=128*2);
+// translate([-omniball_radius+barrel_omniball_radius, 0, -barrel_wheel_height/2]) cylinder(barrel_wheel_height, barrel_omniball_radius, barrel_omniball_radius);
+// }
+// HemisphereConnector();
 
 
 module PerfectBarrelWheelVolume(rad_mult = 0.5)
@@ -372,9 +372,9 @@ module PerfectBarrelWheel(rad_mult = 0.5)
 
 // 3d print rot
 //rotate([0, 90, 0])
-PerfectBarrelWheel();
+// PerfectBarrelWheel();
 
-HemisphereSection2();
+// HemisphereSection2();
 
 module ConnectorColumn()
 {
@@ -417,12 +417,13 @@ module NeoConnector()
 difference()
 {
 ConnectorColumn();
-rotate([0, 90, 0]) ConnectorCutout();
+// rotate([0, 90, 0]) ConnectorCutout();
+rotate([0, -90, 0]) ConnectorCutout();
 }
 }
 
 
-//NeoConnector();
+// NeoConnector();
 //RightHemisphereConnector();
 
 
@@ -451,7 +452,7 @@ module SemisphereRing()
         union()
         {
             // Remove the minimum region which the M8 rod must passthrough
-            translate([-5, -omniball_radius, -omniball_radius])
+            translate([-9/2, -omniball_radius, -omniball_radius])
             cube([omniball_radius*2, omniball_radius*2, omniball_radius*2]);
             
             // Remove the pole part of the hemisphere
@@ -751,7 +752,7 @@ module AxisConnectionScrewNutCuts()
     {
         if (i != 2 && i != 6)
         {
-        translate([axis_connection_thickness, 0, 0]) rotate([90, i*360/axis_connector_screws, -90]) translate([0, inner_radius-10, 0]) scale(1.1) nut_trap_inline(3, "M3");
+        translate([axis_connection_thickness, 0, 0]) rotate([90, i*360/axis_connector_screws, -90]) translate([0, inner_radius-10, 0]) scale(1.02) nut_trap_inline(3, "M3");
         }
     }
 }

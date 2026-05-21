@@ -1,4 +1,4 @@
-use <connector_pentagon_plate.scad>
+include <connector_pentagon_plate.scad>
 include <lift_mount_vertex_connector.scad>
 include <dodecahedroid_config.scad>
 
@@ -55,17 +55,17 @@ module HolonomicMountPanel(panel = true, lug = true) {
 // Lug Only
 //HolonomicMountPanel(panel=false);
 
-module CradleHolonomicCutoutPanel()
+module CradleHolonomicCutoutPanel(print_config=false)
 {
 //translate([0, 0, dodecahedron_radius-vertex_tehtra_height_truncation]) // approximately...
-rotate([-tetra_a, 0, 0])
+rotate([print_config ? -tetra_a: 0, 0, 0])
 difference()
 {
 
 rotate([-magic_angle, 0, 0])
 for (i = [0 : len(pos)-1]) {
     
-    if (i == 9)
+    if ((!print_config && face_groups[i] == 3) || i == 9)
 //    if (face_groups[i] == 3)
     {
     translate(pos[i]*panel_edge_length) rotate(rots[i]) rotate([0, 0, panel_rots[i]])
@@ -108,5 +108,5 @@ for (i = [0 : len(pos)-1])
 //rotate([0, 180, 0])
 //CentralOmniballMountSupport();
 //}
-scale(10) CradleHolonomicCutoutPanel();
+//scale(10) CradleHolonomicCutoutPanel();
 

@@ -4,7 +4,7 @@ include <penta_connector.scad>
 include <dodecahedron_inner_volume.scad>
 
 include <din_rail_ts35.scad>
-include <Dodecahedron-solid.scad>
+//include <Dodecahedron-solid.scad>
 
 
 mothership_connectors = [
@@ -58,18 +58,19 @@ translate(pos[i]*inner_panel_edge_length) rotate(rots[i]) rotate([0, 0, standard
         }
         else if (i == 9)
         {
-            PanelSubConnectorsCradle(z_rot=[90+120, 0, 0, 0, 0]);
+//            PanelSubConnectorsCradle(z_rot=[90+120, 0, 0, 0, 0]);
+//                PanelSubConnectors();
         }
         else if (i == 11)
         {
-            PanelSubConnectorsCradle(z_rot=[90+120*2, 0, 0, 0, 0]);
+//            PanelSubConnectorsCradle(z_rot=[90+120*2, 0, 0, 0, 0]);
         }
     }
 }
 }
 }
 
-// CradlePentaVolume();
+CradlePentaVolume();
 
 module PentaVolume()        
 {
@@ -166,8 +167,8 @@ translate(pos[i]*inner_panel_edge_length) rotate(rots[i]) rotate([0, 0, standard
 
 module HexBasePlatform()
 {
-scale(10)
-rotate([0, 180, 0])
+//scale(10)
+//rotate([0, 180, 0])
 difference()
 {
 color([1, 0, 0, 1])
@@ -175,15 +176,17 @@ translate([0, 0, -height_vertical-vertex_tehtra_height_truncation])
 rotate([0, 0, -90])
 {
 //BaseMountAttachment();
-translate([0, 0, -0.1+0.8]) // For some reason it's 8mm off...
-scale(0.1)
-rotate([0, 180, 0])
-CentralOmniballMountSupport(14);
+//translate([0, 0, -0.1+0.8]) // For some reason it's 8mm off...
+//scale(0.1)
+//rotate([0, 180, 0])
+//CentralOmniballMountSupport(14);
 }
 
 CradlePentaVolume();
 }
 }
+
+//HexBasePlatform();
 
 //color([1, 0, 0, 0.5])
 //Dodecahedron();

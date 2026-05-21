@@ -3,6 +3,9 @@
 
 include <dodecahedroid_config.scad>
 
+// TODO: Isolate to sepratae file for electronics loaded rails?
+//include <gearmotor_mount.scad>
+
 /* [Dimensions] */
 length_in_cm = 30.48; 
 length = length_in_cm * 10; 
@@ -12,7 +15,8 @@ inner_bevel = 1;       // Bevel at the wall-to-flange connection
 /* [Slot Parameters] */
 slot_length = 25;       
 slot_width = 5.2;       
-slot_pitch = 36;        
+slot_pitch = 36;
+slot_spacing = slot_pitch - slot_length;        
 first_slot_offset = 18; 
 
 /* [Hidden Profile Constants] */
@@ -88,6 +92,10 @@ module TS35_DIN_Rail()
     }
 }
 
+
+//translate([0, -clamp_len*10, 0])
+//rotate([-90, 90, 0])
+//GearmotorHookup();
 //TS35_DIN_Rail();
 //DIN_RailBoundingBox();
 //DIN_RailLowerSlits();

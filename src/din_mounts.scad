@@ -1,9 +1,12 @@
+include <connector_pentagon_plate.scad>
+include <holonomic_mount_panel.scad>
+include <din_rail_ts35.scad>
+
 include <dodecahedroid_config.scad>
-include <Dodecahedron-solid.scad>
-use <connector_pentagon_plate.scad>
-use <holonomic_mount_panel.scad>
-use <din_rail_ts35.scad>
-use <plane_slice.scad>
+use <plane_slice_util.scad>
+use <din_loaded.scad>
+
+
 
 // export rotation orientation
 module LowerDINSupport(show_rails=true)
@@ -13,7 +16,7 @@ rail_pos = [106, -65, -30.48/2*10];
 difference()
 {
 
-slice_above(-60)
+slice_above_p(-60)
 {
     scale(10)
     //rotate([-tetra_a, 0, 0])
@@ -37,9 +40,9 @@ slice_above(-60)
         if (i == 2)
     //    if (i == 0)
         {
-        $fn=36*2;
-        translate(pos[i]*panel_edge_length) rotate(rots[i]) rotate([0, 0, panel_rots[i]])
-        HolonomicMountPanel(panel=true);
+//        $fn=36*2;
+    translate(pos[i]*panel_edge_length) rotate(rots[i]) rotate([0, 0, panel_rots[i]])
+    HolonomicMountPanel(panel=false);
     //    NeoCradlePanel();
         } else if (face_groups[i] != 3)
         {
@@ -82,7 +85,8 @@ if (show_rails)
     rotate([90, 0, 90+120*i]) 
     translate(rail_pos)
     color([0.5, 0.5, 0.5, 1.0])
-    TS35_DIN_Rail();
+    MotorRail();
+    //TS35_DIN_Rail();
     }
 }
 

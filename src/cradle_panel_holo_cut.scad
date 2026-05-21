@@ -1,9 +1,9 @@
-include <dodecahedroid_config.scad>
 include <Dodecahedron-solid.scad>
 use <connector_pentagon_plate.scad>
 use <holonomic_mount_panel.scad>
 use <din_rail_ts35.scad>
 use <plane_slice.scad>
+include <dodecahedroid_config.scad>
 
 // export rotation orientation
 module LowerDINSupport(show_rails=true)
